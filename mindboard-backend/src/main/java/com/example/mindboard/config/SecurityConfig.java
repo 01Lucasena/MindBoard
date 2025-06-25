@@ -6,6 +6,7 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 public class SecurityConfig {
@@ -15,15 +16,17 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    //Libera o acesso a todos os endpoints.
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
-     http
-             .csrf(csrf -> csrf.disable())
-             .authorizeHttpRequests(auth -> auth
-                .anyRequest().permitAll()
-             )
-             .httpBasic(Customizer.withDefaults());
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtAuthenticationFilter jwtAuthFilter) throws Exception {
+        http
+            .csrf(csrf -> csrf.disable())
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/auth/**", "/usuarios/**").permitAll()
+                .anyRequest().authenticated()
+            )
+            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+            .httpBasic(Customizer.withDefaults());
+
         return http.build();
     }
 
