@@ -1,23 +1,9 @@
 import React from 'react';
-import { useAuth } from '../../context/AuthContext';
-import ListColumn from '../../components/list-column/ListColumn';
-import './BoardView.css';
-
-const BoardView = () => {
-  const { user } = useAuth();
-
-  const listas = ['To Do', 'Doing', 'Done'];
-
+export default function BoardView() {
   return (
-    <div className="board-page">
-      <h2>Olá, {user?.name || 'usuário'}</h2>
-      <div className="board-columns">
-        {listas.map((nome) => (
-          <ListColumn key={nome} title={nome} />
-        ))}
-      </div>
+    <div>
+      <h1>BoardView</h1>
+      {/* aqui entra sua lista de usuários ou mindboard */}
     </div>
   );
-};
-
-export default BoardView;
+}
